@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <title>Beauty OF Portugal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- SEO Meta -->
+    <meta name="description" content="Discover the beauty of Portugal through blogs, photos, and stories. Explore culture, food, travel, and lifestyle.">
+    <meta name="keywords" content="Portugal, Travel, Beauty of Portugal, Culture, Blog, Tourism, Lifestyle">
+    <meta name="author" content="Beauty Of Portugal">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Beauty Of Portugal">
+    <meta property="og:description" content="Discover the beauty of Portugal through blogs, photos, and stories.">
+    <meta property="og:image" content="/static/images/bop_logo.jpg">
+    <meta property="og:url" content="https://beautyofportugal.com">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Beauty Of Portugal">
+    <meta name="twitter:description" content="Discover the beauty of Portugal through blogs, photos, and stories.">
+    <meta name="twitter:image" content="/static/images/bop_logo.jpg">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4MHR1GLKHP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-4MHR1GLKHP');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309510231797513"
+     crossorigin="anonymous"></script>
+
+    <!-- Add Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300i,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css'%}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css'%}">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css'%}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/lightgallery.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css'%}">
+    <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css'%}">
+    <link rel="stylesheet" href="{% static 'css/swiper.css'%}">
+    <link rel="stylesheet" href="{% static 'css/aos.css'%}">
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+    <style>
+        .site-logo {
+                max-width: 940px;
+                transition: max-width 0.2s;
+                }
+                @media (max-width: 991px) { /* Tablet */
+                .site-logo {
+                    max-width: 500px;
+                }
+                }
+                @media (max-width: 500px) { /* Phone */
+                .site-logo {
+                    max-width: 300px;
+                }
+        }
+
+        .cart-icon {
+            position: relative;
+            display: inline-block;
+        }
+    
+        .cart-icon i {
+            font-size: 24px; /* Adjust the size of the cart icon */
+            color: #20C997; /* Adjust color if needed */
+        }
+    
+        .cart-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: black; /* Background color of the badge */
+            color: white;
+            font-size: 10px;
+            padding: 2px 4px;
+            border-radius: 50%;
+            font-weight: bold;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    
+</head>
+<body>
+
+  
+<div class="site-wrap">
+<div class="site-mobile-menu">
+<div class="site-mobile-menu-header">
+<div class="site-mobile-menu-close mt-3">
+<span class="icon-close2 js-menu-toggle"></span>
+</div>
+</div>
+<div class="site-mobile-menu-body"></div>
+</div>
+<header class="site-navbar py-3 fixed-top bg-white " role="banner">
+<div class="container-fluid">
+<div class="row align-items-center">
+<div class="col-12 col-xl-2 text-center text-xl-left" data-aos="fade-down">
+  <h1 class="mb-0">
+    <a href="/" class="text-black h2 mb-0">
+      <img src="/static/images/bop_logo.jpg" alt="Image" class="img-fluid site-logo">
+    </a>
+  </h1>
+</div>
+<div class="col-10 col-md-8 d-none d-xl-block" data-aos="fade-down">
+<nav class="site-navigation position-relative text-right text-lg-center" role="navigation">
+<ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
+  <li class="{% if request.path == '/' %}active{% endif %}"><a href="/">Home</a></li>
+  <li class="{% if request.path == '/blog/' %}active{% endif %}"><a href="{% url 'blog' %}">Blog</a></li>
+  <li class="{% if request.path == '/aboutus/' %}active{% endif %}"><a href="{% url 'aboutus' %}">About Us</a></li>
+  <li class="{% if request.path == '/contact/' %}active{% endif %}"><a href="{% url 'contact' %}">Contact Us</a></li>
+  {% if user.is_authenticated %}
+  <li class="{% if request.path == '/dashboard/' %}active{% endif %}"><a href="/dashboard/">Dashboard</a></li>
+{% else %}
+  <li class="{% if request.path == '/register/' %}active{% endif %}"><a href="{% url 'register' %}">Login</a></li>
+{% endif %}
+
+</ul>
+</nav>
+</div>
+<div class="col-6 col-xl-2 text-right" data-aos="fade-down">
+<div class="d-none d-xl-inline-block">
+   
+  
+</div>
+</div>
+<div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
+</div>
+</div>
+</div>
+</header>
+
+
+{% block content %}{% endblock %}
+
+
+
+<div class="footer py-4">
+<div class="container-fluid text-center">
+<p>
+
+Copyright &copy; All rights reserved | Beauty Of Portugal | info@beautyofportugal.com</a>
+
+</p>
+</div>
+</div>
+</div>
+
+<!-- Load reCAPTCHA script google-->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<script src="{% static 'js/jquery-3.3.1.min.js'%}"></script>
+<script src="{% static 'js/jquery-migrate-3.0.1.min.js'%}"></script>
+<script src="{% static 'js/jquery-ui.js'%}"></script>
+<script src="{% static 'js/popper.min.js'%}"></script>
+<script src="{% static 'js/bootstrap.min.js'%}"></script>
+<script src="{% static 'js/owl.carousel.min.js'%}"></script>
+<script src="{% static 'js/jquery.stellar.min.js'%}"></script>
+<script src="{% static 'js/jquery.countdown.min.js'%}"></script>
+<script src="{% static 'js/jquery.magnific-popup.min.js'%}"></script>
+<script src="{% static 'js/bootstrap-datepicker.min.js'%}"></script>
+<script src="{% static 'js/swiper.min.js'%}"></script>
+<script src="{% static 'js/aos.js'%}"></script>
+<script src="{% static 'js/picturefill.min.js'%}"></script>
+<script src="{% static 'js/lightgallery-all.min.js'%}"></script>
+<script src="{% static 'js/jquery.mousewheel.min.js'%}"></script>
+<script src="{% static 'js/main.js'%}"></script>
+<script>
+    $(document).ready(function(){
+      $('#lightgallery').lightGallery();
+    });
+  </script>
+
+</body>
+</html>
+
+
+<!--https://preview.colorlib.com/#photon-->

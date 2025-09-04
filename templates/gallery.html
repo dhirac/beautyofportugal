@@ -1,0 +1,255 @@
+{% extends 'landing_base.html' %}
+{% block content %}
+<div style="margin-top:100px">
+<!-- Basic CSS for layout -->
+<style>
+    /* Basic reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Container for the gallery */
+    .photo-gallery {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Each photo item with margins */
+    .photo-item {
+        width: 20%; /* Adjust as needed */
+        margin-bottom: 10px;
+        display: inline-block; /* Allow Masonry to arrange items */
+        position: relative; /* For positioning the spinner and buttons */
+    }
+
+    /* Image styles */
+    .photo-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 8px;
+        padding: 2px;
+        cursor: pointer; /* Show pointer cursor on hover */
+    }
+
+    /* Spinner styles */
+    .spinner-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+    }
+
+    /* Overlay for icons and price */
+    .photo-overlay {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.6); /* Dim background */
+        color: white; /* Text color */
+        border-radius: 8px;
+    }
+
+    /* Price styling */
+    .photo-price {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    /* Icon container styling */
+    .icon-container {
+        display: flex;
+        gap: 10px; /* Space between icons */
+    }
+
+    /* Icon styling */
+    .icon-container button {
+        background: lightseagreen; /* Light background for buttons */
+        border: none;
+        border-radius: 4px;
+        padding: 5px;
+        cursor: pointer;
+        color: black;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .icon-container button:hover {
+        background: darkcyan; /* Hover effect */
+    }
+
+    /* Cart count styles */
+    #cart-count {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        border-radius: 50%;
+        padding: 5px 10px;
+    }
+</style>
+
+
+<div class="photo-gallery" id="lightgallery">
+    <!-- Django template logic for looping through photos -->
+    {% for p in photos %}
+        <div class="photo-item" data-aos="fade" data-src="/media/{{ p.watermarked_image }}" data-sub-html="<h4>{{ p.title }}</h4><p>{{ p.description }}</p>">
+            <!-- Spinner for image loading -->
+            <div class="spinner-wrapper">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <img src="{{ p.thumbnail.url }}" alt="{{ p.title }}" onclick="openLightbox(this);" onload="this.parentNode.querySelector('.spinner-wrapper').style.display = 'none';" onerror="this.parentNode.querySelector('.spinner-wrapper').style.display = 'none';">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <!-- Overlay for icons and price -->
+            <div class="photo-overlay">
+                <!-- Price -->
+                <div class="photo-price" style="font-size:12px;">
+                    <i class="fas fa-comment"></i>2
+                </div>
+                <!-- Icon container -->
+                <div class="icon-container">
+                    <!-- Add to Cart Button -->
+                   
+                    <!-- View Details Button -->
+                    <button class="btn-icon" onclick="viewDetails('{{ p.slug }}'); event.stopPropagation();">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</div>
+
+<!-- Include Bootstrap CSS and Font Awesome -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+<!-- Include Masonry.js -->
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<!-- Include imagesLoaded.js to ensure proper loading of images -->
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+
+<!-- Include lightGallery.js -->
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.8.6/dist/js/lightgallery.min.js"></script>
+
+<!-- Initialize Masonry and lightGallery after images are loaded -->
+<script>
+    window.addEventListener('load', function() {
+        var galleryElem = document.querySelector('.photo-gallery');
+
+        // Ensure images are fully loaded
+        imagesLoaded(galleryElem, function() {
+            // Initialize Masonry after all images are loaded
+            var masonryInstance = new Masonry(galleryElem, {
+                itemSelector: '.photo-item',
+                columnWidth: '.photo-item',
+                percentPosition: true
+            });
+
+            // Add a slight delay before initializing lightGallery
+            setTimeout(function() {
+                lightGallery(galleryElem, {
+                    selector: '.photo-item',
+                    download: false, // Disable download option if not needed
+                    thumbnail: true, // Enable thumbnail preview
+                    animateThumb: false // Disable thumbnail animation
+                });
+            }, 500); // 500ms delay
+        });
+    });
+
+    window.addEventListener('resize', function() {
+        var galleryElem = document.querySelector('.photo-gallery');
+        if (galleryElem) {
+            var masonryInstance = Masonry.data(galleryElem);
+            if (masonryInstance) {
+                masonryInstance.layout(); // Trigger layout on resize
+            }
+        }
+    });
+
+    function openLightbox(element) {
+        var lightGalleryInstance = lightGallery(element.closest('.photo-gallery'));
+        lightGalleryInstance.openLightBox(element.closest('.photo-item').dataset.index);
+    }
+
+    function addToCart(photoId) {
+        fetch('/addCart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',  // This is important for Django to recognize the AJAX request
+                'X-CSRFToken': '{{ csrf_token }}',  // Include the CSRF token for security
+            },
+            body: JSON.stringify({
+                'photo_id': photoId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data, "test");
+            if (data.cart_count !== undefined) {
+                // Update the cart count in the top bar with the new total quantity
+                document.getElementById('cart-count').innerText = data.cart_count;
+            }
+            if (data.message) {
+                // Show success message or modal
+                alert(data.message);  // Replace with your modal logic if needed
+            }
+        })
+        .catch(error => {
+            console.error('Error adding to cart:', error);
+        });
+    }
+    
+
+    
+    // Function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Check if this cookie string begins with the name we want
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+
+    function viewDetails(photoSlug) {
+        window.location.href = `/photo/gallery/${photoSlug}/`;
+        
+    }
+</script>
+
+{% endblock %}
+
+
+
+

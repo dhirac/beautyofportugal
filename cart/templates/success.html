@@ -1,0 +1,18 @@
+
+
+{% extends 'landing_base.html' %}
+{% block content %}
+
+<!-- payment.html -->
+
+<div class="container-sm mt-5 text-center" style="margin:90px; background-color: aliceblue; padding:20px; border-radius: 20px;">
+    <h1>Payment Successful!</h1>
+    <p>Thank you for your purchase.</p>
+ 
+    <p>Total Amount: <strong>{{ order.total_amount }}</strong></p>
+   
+    <a href="/" class="btn btn-primary">Return to Home</a>
+</div>
+
+
+{% endblock %}

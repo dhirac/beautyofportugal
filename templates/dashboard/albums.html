@@ -1,0 +1,27 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block content %}
+
+
+    <!-- Main Content Area -->
+    <div class="content">
+<h1>Photo Albums</h1>
+<div class="row  ">
+
+    {% for category in categories %}
+    
+        <div class="album_inner">
+        <div class="p5 text-center" style="background-color:azure;">{{category.title}}</div>
+        <a href="{% url 'album_photos' category.slug %}"> 
+            {% if category.thumbnail %}
+                <img src="{{ category.thumbnail.url }}" alt="{{ category.name }}" style="width: 200px; ">
+            {% endif %}
+            
+        </a>
+        <h5 class="text-center mt-3 text-white">( {{ category.photo_count }} photos )</h5>
+    </div>
+ 
+  
+    {% endfor %}
+</ul>
+</div>
+{% endblock %}

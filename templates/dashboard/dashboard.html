@@ -1,0 +1,56 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block content %}
+
+    <!-- Main Content Area -->
+    <div class="content">
+        
+        <div class="user-profile">
+            <!-- User Profile Image -->
+           
+            {% if profile and profile.avatar %}
+           
+            <img src="/media/{{profile.avatar}}" alt="Image"> 
+            {% else %}
+            <img src="/static/images/avatar.png" alt="User Image">
+            {% endif %}
+            
+            <!-- User Info -->
+            <div class="user-info mt-3">
+               
+              <h5>Welcome, {{profile.full_name}}</h5>
+              <p>Email: {{ email }}</p> <!-- Display user's email -->
+             <p>Joined: {{ join_date|date:"F j, Y" }}</p> <!-- Format the joined date -->
+
+              <a href="{% url 'update_profile' %}"  type="submit" class="btn btn-primary">Update Profile</a>
+            </div>
+          </div>
+    
+          <!-- User Details -->
+
+       
+          <div class="details-card mt-4">
+            <div class="card shadow-sm">
+              <div class="card-body text-center">
+                <div class="row">
+                  <div class="col-md-4">
+                    <h6>Total Photos</h6>
+                    <p><strong>{{total_photos}}</strong></p>
+                  </div>
+                  <div class="col-md-4">
+                    <h6></h6>
+                    <p><strong></strong></p>
+                  </div>
+                  <div class="col-md-4">
+                    <h6>Total Views</h6>
+                    <p><strong>{{total_views}}</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+    </div>
+
+
+
+    {% endblock %}

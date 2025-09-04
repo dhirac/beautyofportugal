@@ -1,0 +1,115 @@
+{% extends 'landing_base.html' %}
+{% block content %}
+
+<style>
+  .blog-top-margin {
+    margin-top: 60px;
+  }
+
+  /* Add extra top margin for small screens */
+  @media (max-width: 575px) {
+    .blog-top-margin {
+      margin-top: 100px;
+    }
+  }
+
+  .blog-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18), 0 1.5px 3px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .blog-card img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .blog-card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  .blog-card-title {
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-card-text {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.4;
+    max-height: 3.8em;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Responsive columns */
+  .blog-col {
+    margin-bottom: 20px; /* vertical spacing */
+    padding-left: 10px;   /* horizontal spacing */
+    padding-right: 10px;
+  }
+
+  @media (max-width: 575px) {
+    .blog-col {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+
+  @media (min-width: 576px) and (max-width: 767px) {
+    .blog-col {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1199px) {
+    .blog-col {
+      flex: 0 0 33.3333%;
+      max-width: 33.3333%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .blog-col {
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+  }
+</style>
+
+<div class="container-fluid blog-top-margin">
+  <div class="row">
+
+    {% for blog in blogs %}
+    <div class="blog-col d-flex">
+      <div class="blog-card w-100 h-100">
+        
+        {% if blog.banner %}
+        <img src="{{ blog.banner.url }}" alt="{{ blog.title }}">
+        {% endif %}
+
+        <div class="blog-card-body">
+          <div>
+            <h5 class="blog-card-title">{{ blog.title }}</h5>
+            <p class="blog-card-text">{{ blog.description|truncatewords:25|striptags }}</p>
+          </div>
+          <a href="{% url 'blog_detail' blog.slug %}" class="btn btn-primary w-100">Read More</a>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Order Notification</title>
+</head>
+<body>
+    <h2>Hello {{ photographer.username }},</h2>
+    <p>You have a new order for the following photos:</p>
+
+    <h3>Order Details:</h3>
+    <ul>
+        {% for item in items %}
+        <li>Product: {{ item.product }} - Quantity: {{ item.quantity }} - Price: ${{ item.price }}</li>
+        {% endfor %}
+    </ul>
+
+    <p>Total earnings: ${{ items|sum_prices }}</p>
+
+    <p>Thank you for using our platform!</p>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .email-header {
+            background-color: #20C997;
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+        }
+        .email-header h1 {
+            margin: 0;
+        }
+        .email-body {
+            padding: 20px;
+        }
+        .order-details {
+            margin: 20px 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .order-details th, .order-details td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .order-details th {
+            background-color: #f9f9f9;
+        }
+        .total-row {
+            font-weight: bold;
+            border-top: 2px solid #333;
+        }
+        .email-footer {
+            background-color: #f9f9f9;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+        .email-footer a {
+            color: #20C997;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <h1>Thank You for Your Order!</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <p>Hi {{ user.first_name }},</p>
+            <p>We’ve received your order. Below are the details:</p>
+
+            <!-- Order Information -->
+            <table class="order-details">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                        <td>{{ item.product }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>€{{ item.price }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="total-row">
+                        <td colspan="2">Total Amount</td>
+                        <td>€{{ order.total_amount }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>If you have any questions or concerns about your order, feel free to <a href="mailto:support@example.com">contact us</a>.</p>
+
+            <p>Thank you for shopping with us!</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <p>&copy; 2024 Beauty of Portugal. All rights reserved.</p>
+            <p><a href="https://example.com">Visit our website</a></p>
+        </div>
+    </div>
+</body>
+</html>

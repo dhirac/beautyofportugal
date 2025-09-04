@@ -1,0 +1,2 @@
+web: gunicorn beautyofportugal.wsgi --log-file
+web: python manage.py migrate && gunicorn beautyofportugal.wsg

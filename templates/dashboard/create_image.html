@@ -1,0 +1,84 @@
+{% extends 'landing_base.html' %}
+{% block content %}
+<h2>Your Cart</h2>
+
+<table class="table table-striped">
+    <thead class="bg-success text-white">
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.product.title }}</td>
+            <td>
+                <input type="number" class="form-control cart-quantity" data-id="{{ item.id }}" value="{{ item.quantity }}" min="1" />
+            </td>
+            <td>€{{ item.price }}</td>
+            <td>€{{ item.get_total_price }}</td>
+            <td>
+                <button class="btn btn-danger remove-item" data-id="{{ item.id }}">Remove</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total: €{{ total }}</h3>
+<a href="#" class="btn btn-primary">Proceed to Checkout</a>
+
+<!-- Include jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Update quantity and recalculate total
+        $('.cart-quantity').on('change', function() {
+            const itemId = $(this).data('id');
+            const quantity = $(this).val();
+
+            // AJAX call to update quantity
+            $.ajax({
+                url: '/update-cart/',  // Update this with your actual URL
+                method: 'POST',
+                data: {
+                    'id': itemId,
+                    'quantity': quantity,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    // Update total price
+                    $('#total-price').text('€' + response.total);
+                }
+            });
+        });
+
+        // Remove item
+        $('.remove-item').on('click', function() {
+            const itemId = $(this).data('id');
+
+            // AJAX call to remove item
+            $.ajax({
+                url: '/remove-item/',  // Update this with your actual URL
+                method: 'POST',
+                data: {
+                    'id': itemId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    // Remove the item from the table
+                    $('button[data-id="' + itemId + '"]').closest('tr').remove();
+                    $('#total-price').text('€' + response.total);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

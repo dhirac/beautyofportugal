@@ -1,0 +1,159 @@
+{% extends 'landing_base.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="container-sm" style="margin:90px; background-color: aliceblue; padding:20px; border-radius: 20px;">
+    {% if items.count > 0 %}
+    <h2>Your Cart</h2>
+
+   
+    <table class="table table-hover">
+        <thead style="background-color: #20C997;">
+            <tr >
+                <th style="width:10px"></th>
+                <th style="width:400px">Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="cart-items">
+            {% for item in items %}
+            <tr data-id="{{ item.id }}">
+                <td ><img src="{{ item.product.thumbnail.url }}" alt="{{ tiem.product.title }}" class="responsive-image" width="100px"></td>
+                <td>{{ item.product.title }}  </td>
+                <td>
+                    <input type="number" class="form-control cart-quantity" data-id="{{ item.id }}" value="{{ item.quantity }}" min="1" max="5" />
+                </td>
+                <td>€{{ item.price }}</td>
+                <td>€<span class="item-total">{{ item.get_total_price }}</span></td>
+                <td>
+                    <button class="btn btn-danger remove-item" data-id="{{ item.id }}">
+                        <i class="fas fa-trash-alt" style="color:#20C997"></i> 
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+   
+
+    <h3>Total: €<span id="cart-total">{{ total }}</span></h3>
+    <a href="{% url 'billingDetails' %}" class="btn btn-primary">Proceed to Billings</a>
+    {% else %}
+      <h3 class="text-center">Sorry, You dont have any product in your cart. <a href="/">Add Now</a> </h3>
+    {% endif %}
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to update the total price for an item
+        function updateItemTotal(itemRow) {
+            const quantityInput = itemRow.querySelector('.cart-quantity');
+            const price = parseFloat(itemRow.querySelector('td:nth-child(3)').innerText.replace('€', ''));
+            const quantity = parseInt(quantityInput.value);
+            const itemTotal = (price * quantity).toFixed(2);
+            itemRow.querySelector('.item-total').innerText = itemTotal;
+    
+            updateCartTotal();
+        }
+    
+        // Function to update the overall cart total
+        function updateCartTotal() {
+            let total = 0;
+            const itemTotals = document.querySelectorAll('.item-total');
+            itemTotals.forEach(itemTotal => {
+                total += parseFloat(itemTotal.innerText);
+            });
+            document.getElementById('cart-total').innerText = total.toFixed(2);
+        }
+    
+        // Event listener for quantity changes
+        document.querySelectorAll('.cart-quantity').forEach(input => {
+            input.addEventListener('change', function() {
+                const itemRow = this.closest('tr');
+                const itemId = this.getAttribute('data-id');
+                const newQuantity = this.value;
+    
+                // AJAX call to update the quantity in the cart
+                fetch('/updateCart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': '{{ csrf_token }}',  // Ensure CSRF token is included
+                    },
+                    body: JSON.stringify({
+                        id: itemId,
+                        quantity: newQuantity
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Update the item total and overall cart total
+                    if (data.cart_count !== undefined) {
+                        document.getElementById('cart-count').innerText = data.cart_count;
+                    }
+                    updateItemTotal(itemRow);
+                })
+                .catch(error => {
+                    console.error('Error updating cart item:', error);
+                });
+            });
+        });
+    
+        // Event listener for remove item buttons
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemRow = this.closest('tr');
+                const itemId = this.getAttribute('data-id');
+
+                // Show confirmation dialog
+        const confirmDelete = confirm('Are you sure you want to remove this item from the cart?');
+        if (!confirmDelete) {
+            return; // Exit if the user cancels
+        }
+    
+                // AJAX call to remove the item from the cart
+                fetch('/deleteCart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': '{{ csrf_token }}',  // Ensure CSRF token is included
+                    },
+                    body: JSON.stringify({
+                        id: itemId
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.cart_count !== undefined) {
+                        document.getElementById('cart-count').innerText = data.cart_count;
+                    }
+                    itemRow.remove();  // Remove the row from the table
+                    updateCartTotal();  // Update total after removal
+                })
+                .catch(error => {
+                    console.error('Error deleting cart item:', error);
+                });
+            });
+        });
+    });
+    
+    </script>
+    
+
+{% endblock %}

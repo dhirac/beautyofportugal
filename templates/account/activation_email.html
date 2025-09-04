@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Activate Your Account</title>
+</head>
+<body>
+    <p>Hi {{ user.email }},</p>
+
+    <p>Thank you for signing up! Please click the link below to activate your account:</p>
+
+    <p>
+        <a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}">
+            Activate Your Account
+        </a>
+    </p>
+
+    <p>If the link doesn't work, you can copy and paste the following URL into your browser:</p>
+
+    <p>http://{{ domain }}{% url 'activate' uidb64=uid token=token %}</p>
+
+    <p>Thank you,<br>The CloudInovater Team</p>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block content %}
+
+
+    <!-- Main Content Area -->
+    <div class="content">
+<h1>Upload Photo</h1>
+
+ <!-- Show form errors here -->
+ {% if form.errors %}
+ <div class="error" >
+    
+     <ul>
+         {% for field, errors in form.errors.items %}
+             {% for error in errors %}
+                 <li>{{ error }}</li>
+             {% endfor %}
+         {% endfor %}
+     </ul>
+ </div>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.media }}  <!-- TinyMCE if you're using it for metadata -->
+    <div class="form-group">
+        <label for="title">Title</label>
+        {{ form.title }}
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        {{ form.description }}
+    </div>
+    <div class="form-group">
+        <label for="original_image">Upload Image</label>
+        {{ form.original_image }}
+    </div>
+    <div class="form-group">
+        <label for="category">Category</label>
+        {{ form.category }}
+    </div>
+
+    <div class="form-group">
+        <label for="metadata">Metadata</label>
+        {{ form.metadata }}  <!-- This could be a rich text field if you're using TinyMCE/CKEditor -->
+    </div>
+    <button type="submit" class="btn btn-primary">Upload Your Photo</button>
+</form>
+    </div>
+
+    {% endblock %}
