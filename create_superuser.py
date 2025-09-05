@@ -10,10 +10,10 @@ User = get_user_model()
 
 SUPERUSER_NAME = "admin"
 SUPERUSER_EMAIL = "admin@example.com"
-SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PWD")
+SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
 if not SUPERUSER_PASSWORD:
-    raise ValueError("DJANGO_SUPERUSER_PWD environment variable is not set!")
+    raise ValueError("DJANGO_SUPERUSER_PASSWORD environment variable is not set!")
 
 if not User.objects.filter(username=SUPERUSER_NAME).exists():
     User.objects.create_superuser(
