@@ -1,21 +1,24 @@
+# create_superuser.py
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'beautyofportugal.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beautyofportugal.settings")
 django.setup()
 
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-username = 'dhiracadmin'
-email = 'pjdhirajshrestha@gmail.com'
-password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
 
-if not User.objects.filter(username=username).exists():
-    if password:
-        User.objects.create_superuser(username=username, email=email, password=password)
-        print(f"Superuser '{username}' created successfully.")
-    else:
-        print("DJANGO_SUPERUSER_PASSWORD is not set. Superuser not created.")
+SUPERUSER_NAME = os.environ.get("DJANGO_SUPERUSER_USERNAME", "admin")
+SUPERUSER_EMAIL = os.environ.get("DJANGO_SUPERUSER_EMAIL", "pjdhirajshrestha@gmail.com")
+SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD", "changeme")
+
+if not User.objects.filter(username=SUPERUSER_NAME).exists():
+    User.objects.create_superuser(
+        username=SUPERUSER_NAME,
+        email=SUPERUSER_EMAIL,
+        password=SUPERUSER_PASSWORD,
+    )
+    print(f"Superuser '{SUPERUSER_NAME}' created.")
 else:
-    print(f"Superuser '{username}' already exists.")
+    print(f"Superuser '{SUPERUSER_NAME}' already exists.")
