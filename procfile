@@ -1,5 +1,3 @@
-# Web process: collect static files and start Gunicorn
 web: python manage.py collectstatic --noinput && gunicorn beautyofportugal.wsgi --bind 0.0.0.0:$PORT --workers 1
 
-# Release process: run migrations and create superuser if not exists
-release: python manage.py migrate && python manage.py shell -c "import os; from django.contrib.auth import get_user_model; U=get_user_model(); U.objects.filter(username='admin').exists() or U.objects.create_superuser('admin','admin@example.com', os.environ.get('DJANGO_SUPERUSER_PASSWORD','changeme'))"
+release: python manage.py migrate && python create_superuser.py
