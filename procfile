@@ -1,7 +1,2 @@
-# Procfile
-
-# Web process: collect static files and start Gunicorn
 web: python manage.py collectstatic --noinput && gunicorn beautyofportugal.wsgi --bind 0.0.0.0:$PORT --workers 1
-
-# Release process: run migrations and create/update superuser
 release: python manage.py migrate && python create_superuser.py

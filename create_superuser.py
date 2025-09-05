@@ -1,4 +1,3 @@
-# create_superuser.py
 import os
 import django
 
@@ -9,9 +8,12 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-SUPERUSER_NAME = os.environ.get("DJANGO_SUPERUSER_USERNAME", "admin")
-SUPERUSER_EMAIL = os.environ.get("DJANGO_SUPERUSER_EMAIL", "pjdhirajshrestha@gmail.com")
-SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD", "changeme")
+SUPERUSER_NAME = "admin"
+SUPERUSER_EMAIL = "admin@example.com"
+SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
+
+if not SUPERUSER_PASSWORD:
+    raise ValueError("DJANGO_SUPERUSER_PASSWORD environment variable is not set!")
 
 if not User.objects.filter(username=SUPERUSER_NAME).exists():
     User.objects.create_superuser(
@@ -19,6 +21,9 @@ if not User.objects.filter(username=SUPERUSER_NAME).exists():
         email=SUPERUSER_EMAIL,
         password=SUPERUSER_PASSWORD,
     )
-    print(f"Superuser '{SUPERUSER_NAME}' created.")
+    print(f"Superuser '{SUPERUSER_NAME}' created successfully!")
 else:
-    print(f"Superuser '{SUPERUSER_NAME}' already exists.")
+    user = User.objects.get(username=SUPERUSER_NAME)
+    user.set_password(SUPERUSER_PASSWORD)
+    user.save()
+    print(f"Superuser '{SUPERUSER_NAME}' already exists. Password updated.")
