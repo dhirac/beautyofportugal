@@ -70,7 +70,7 @@ window.onload = function() {
             <h2 class="mb-3">{{ category.title }}</h2>
             <a href="gallery/{{ category.slug }}" class="btn btn-outline-white py-2 px-4">More Photos</a>
           </div>
-          <img src="/media/{{ category.thumbnail }}" alt="Image"> 
+          <img src="{{ category.thumbnail.url}}" alt="Image"> 
         </div>
       </div>
       {% endfor %} 
