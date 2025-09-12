@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 # -----------------------------
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-secret-key')  # set in Railway
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
 
 ALLOWED_HOSTS = ['beautyofportugal-production.up.railway.app','www.beautyofportugal.com','https://www.beautyofportugal.com']
 CSRF_TRUSTED_ORIGINS = ['https://beautyofportugal-production.up.railway.app','https://www.beautyofportugal.com']
