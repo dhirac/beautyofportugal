@@ -144,7 +144,7 @@ def contact(request):
         recaptcha_response = request.POST.get('g-recaptcha-response')
         recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify'
         recaptcha_data = {
-            'secret': settings.RECAPTCHA_PRIVATE_KEY,
+            'secret': settings.RECAPTCHA_SECRET_KEY,
             'response': recaptcha_response
         }
         recaptcha_result = requests.post(recaptcha_url, data=recaptcha_data).json()
@@ -153,7 +153,7 @@ def contact(request):
             error.append("Invalid reCAPTCHA. Please try again.")
 
         if error:
-            return render(request, "contact.html", {'error': error, 'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_PUBLIC_KEY})
+            return render(request, "contact.html", {'error': error, 'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_SECRET_KEY})
 
         # --- Send email if reCAPTCHA passed ---
         full_message = f"""
