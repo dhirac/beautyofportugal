@@ -30,6 +30,8 @@ CSRF_TRUSTED_ORIGINS = ['https://beautyofportugal-production.up.railway.app','ht
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 
+RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')
+
 # -----------------------------
 # Installed apps
 # -----------------------------
