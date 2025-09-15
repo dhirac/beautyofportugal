@@ -75,7 +75,7 @@ def signup(request):
         # Verify reCAPTCHA
         recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify'
         recaptcha_data = {
-            'secret': settings.RECAPTCHA_PRIVATE_KEY,
+            'secret': settings.RECAPTCHA_SECRET_KEY,
             'response': recaptcha_response
         }
         recaptcha_result = requests.post(recaptcha_url, data=recaptcha_data).json()
@@ -110,7 +110,7 @@ def signup(request):
 
             success.append("User created successfully. Please check your email to activate.")
 
-    return render(request, "registration.html", {'error': error, 'success': success, 'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_PUBLIC_KEY})
+    return render(request, "registration.html", {'error': error, 'success': success, 'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_SECRET_KEY})
 
 
 
