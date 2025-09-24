@@ -155,7 +155,7 @@ def contact(request):
         if error:
             return render(request, "contact.html", {
                 'error': error,
-                'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_PUBLIC_KEY  # <-- use public key, not secret
+                'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_SECRET_KEY  # <-- use public key, not secret
             })
 
         # --- Send email via Brevo API ---
@@ -196,5 +196,5 @@ def contact(request):
 
     # GET request, render form
     return render(request, "contact.html", {
-        'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_PUBLIC_KEY
+        'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_SECRET_KEY
     })
