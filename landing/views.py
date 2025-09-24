@@ -153,9 +153,12 @@ def contact(request):
             error.append("Invalid reCAPTCHA. Please try again.")
 
         if error:
-            return render(request, "contact.html", {'error': error, 'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_SECRET_KEY})
+            return render(request, "contact.html", {
+                'error': error,
+                'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_PUBLIC_KEY  # <-- use public key, not secret
+            })
 
-        # --- Send email if reCAPTCHA passed ---
+        # --- Send email via Brevo API ---
         full_message = f"""
         You have a new contact form submission from your website Beauty Of Portugal:
 
@@ -168,49 +171,30 @@ def contact(request):
         {message}
         """
 
-        send_mail(
-            subject=f"Contact Form: {subject}",
-            message=full_message,
-            from_email="no-reply@beautyofportugal.com",  # must match EMAIL_HOST_USER
-            recipient_list=["pjdhirajshrestha@gmail.com"],
-        )
+        url = "https://api.brevo.com/v3/smtp/email"
+        headers = {
+            "accept": "application/json",
+            "api-key": settings.BREVO_API_KEY,   # define in settings.py
+            "content-type": "application/json",
+        }
+        payload = {
+            "sender": {"name": "Beauty Of Portugal", "email": "no-reply@beautyofportugal.com"},
+            "to": [{"email": "pjdhirajshrestha@gmail.com"}],
+            "subject": f"Contact Form: {subject}",
+            "htmlContent": f"<pre>{full_message}</pre>"
+        }
 
-        messages.success(request, "Your message has been sent successfully! We will get back to you soon.")
+        try:
+            response = requests.post(url, headers=headers, json=payload, timeout=10)
+            response.raise_for_status()
+            messages.success(request, "Your message has been sent successfully! We will get back to you soon.")
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Brevo error: {e}")
+            messages.error(request, "There was a problem sending your message. Please try again later.")
+
         return redirect("contact")
 
     # GET request, render form
-    return render(request, "contact.html")
-'''
-def contact(request):
-    if request.method == "POST":
-        fname = request.POST.get("fname")
-        lname = request.POST.get("lname")
-        email = request.POST.get("email")
-        subject = request.POST.get("subject")
-        message = request.POST.get("message")
-
-        full_message = f"""
-        You have a new contact form submission from your website Beauty Of Portugal:
-
-        From: {fname} {lname}
-        Email: {email}
-        
-        Subject: {subject}
-        
-        Message:
-        {message}
-        """
-
-        # send email
-        send_mail(
-            subject=f"Contact Form: {subject}",
-            message=full_message,
-            from_email="no-reply@beautyofportugal.com",  # must match EMAIL_HOST_USER
-            recipient_list=["pjdhirajshrestha@gmail.com"],  # where you receive it
-        )
-
-        messages.success(request, "Your message has been sent successfully! We will get back to you soon.")
-        return redirect("contact")
-
-    return render(request, "contact.html")
-'''
+    return render(request, "contact.html", {
+        'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_PUBLIC_KEY
+    })
